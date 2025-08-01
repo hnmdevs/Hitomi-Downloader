@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🖼️ Imoogle Downloader - Download Images & Media from 70+ Sites</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖼️</text></svg>">
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .dark .glass-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .progress-bar {
+            transition: width 0.3s ease-in-out;
+        }
+        
+        .bounce-in {
+            animation: bounceIn 0.6s ease-out;
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(102, 126, 234, 0.8); }
+        }
+
+        .demo-badge {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen transition-colors duration-300" id="body">
+    
+    <!-- Header -->
+    <header class="gradient-bg text-white py-6 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="text-4xl">🖼️</div>
+                    <div>
+                        <div class="flex items-center space-x-3">
+                            <h1 class="text-3xl font-bold">Imoogle Downloader</h1>
+                            <span class="demo-badge">DEMO</span>
+                        </div>
+                        <p class="text-blue-100">Download images & media from 70+ websites</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-colors">
+                        <i class="fas fa-moon" id="theme-icon"></i>
+                    </button>
+                    <a href="#supported-sites" class="px-4 py-2 bg-white bg-opacity-20 rounded-lg hover:bg-opacity-30 transition-colors">
+                        <i class="fas fa-list mr-2"></i>Supported Sites
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Demo Notice -->
+    <div class="bg-yellow-100 dark:bg-yellow-900 border-l-4 border-yellow-500 p-4 mb-6">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-info-circle text-yellow-500"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-yellow-700 dark:text-yellow-300">
+                        <strong>Demo Mode:</strong> This is a demonstration version deployed on Vercel. 
+                        Downloads are simulated for showcase purposes. 
+                        <a href="https://github.com/your-username/Imoogle-Downloader" class="underline hover:text-yellow-800">
+                            Get the full version on GitHub
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        
+        <!-- Download Form -->
+        <div class="max-w-4xl mx-auto mb-8">
+            <div class="glass-card rounded-2xl p-8 shadow-xl bounce-in">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">
+                        <i class="fas fa-download mr-2 text-blue-500"></i>
+                        Start Your Download
+                    </h2>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        Paste any URL from supported sites and watch the magic happen!
+                    </p>
+                </div>
+                
+                <form id="downloadForm" class="space-y-6">
+                    <div class="relative">
+                        <input 
+                            type="url" 
+                            id="urlInput" 
+                            placeholder="https://instagram.com/p/example or https://imgur.com/gallery/example"
+                            class="w-full px-6 py-4 text-lg border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-blue-500 focus:outline-none transition-colors bg-white dark:bg-gray-800 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                            required
+                        >
+                        <div class="absolute right-4 top-1/2 transform -translate-y-1/2">
+                            <i class="fas fa-link text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Options -->
+                    <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
+                        <button type="button" onclick="toggleAdvanced()" class="flex items-center justify-between w-full text-left">
+                            <span class="font-medium text-gray-700 dark:text-gray-300">
+                                <i class="fas fa-cog mr-2"></i>Advanced Options
+                            </span>
+                            <i class="fas fa-chevron-down transform transition-transform" id="advanced-chevron"></i>
+                        </button>
+                        
+                        <div id="advancedOptions" class="hidden mt-4 space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Quality
+                                    </label>
+                                    <select class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white">
+                                        <option value="best">Best Quality</option>
+                                        <option value="high">High Quality</option>
+                                        <option value="medium">Medium Quality</option>
+                                        <option value="low">Low Quality</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Format
+                                    </label>
+                                    <select class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white">
+                                        <option value="original">Original Format</option>
+                                        <option value="jpg">JPEG</option>
+                                        <option value="png">PNG</option>
+                                        <option value="webp">WebP</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-4">
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="mr-2 text-blue-500">
+                                    <span class="text-sm text-gray-700 dark:text-gray-300">Create subfolder</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="mr-2 text-blue-500">
+                                    <span class="text-sm text-gray-700 dark:text-gray-300">Skip duplicates</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button 
+                        type="submit" 
+                        id="downloadBtn"
+                        class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-4 px-6 rounded-xl font-semibold text-lg hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg pulse-glow"
+                    >
+                        <i class="fas fa-download mr-2"></i>
+                        <span id="downloadBtnText">Start Download (Demo)</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Progress Section -->
+        <div id="progressSection" class="max-w-4xl mx-auto mb-8 hidden">
+            <div class="glass-card rounded-2xl p-6 shadow-xl fade-in">
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">
+                    <i class="fas fa-tasks mr-2 text-green-500"></i>
+                    Download Progress
+                </h3>
+                
+                <div id="progressContainer">
+                    <!-- Progress items will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Supported Sites -->
+        <div id="supported-sites" class="max-w-6xl mx-auto">
+            <div class="glass-card rounded-2xl p-8 shadow-xl">
+                <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center">
+                    <i class="fas fa-globe mr-2 text-blue-500"></i>
+                    Supported Websites
+                </h3>
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- Popular sites -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 text-center hover:shadow-lg transition-shadow">
+                        <div class="text-2xl mb-2">📸</div>
+                        <div class="font-medium text-gray-800 dark:text-white">Instagram</div>
+                        <div class="text-sm text-gray-500">Photos & Stories</div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 text-center hover:shadow-lg transition-shadow">
+                        <div class="text-2xl mb-2">🎨</div>
+                        <div class="font-medium text-gray-800 dark:text-white">Pinterest</div>
+                        <div class="text-sm text-gray-500">Images & Boards</div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 text-center hover:shadow-lg transition-shadow">
+                        <div class="text-2xl mb-2">🖼️</div>
+                        <div class="font-medium text-gray-800 dark:text-white">Imgur</div>
+                        <div class="text-sm text-gray-500">Image Hosting</div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 text-center hover:shadow-lg transition-shadow">
+                        <div class="text-2xl mb-2">💬</div>
+                        <div class="font-medium text-gray-800 dark:text-white">Reddit</div>
+                        <div class="text-sm text-gray-500">Discussion Forum</div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 text-center hover:shadow-lg transition-shadow">
+                        <div class="text-2xl mb-2">🐦</div>
+                        <div class="font-medium text-gray-800 dark:text-white">Twitter</div>
+                        <div class="text-sm text-gray-500">Social Media</div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 text-center hover:shadow-lg transition-shadow">
+                        <div class="text-2xl mb-2">🎥</div>
+                        <div class="font-medium text-gray-800 dark:text-white">YouTube</div>
+                        <div class="text-sm text-gray-500">Videos</div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 text-center hover:shadow-lg transition-shadow">
+                        <div class="text-2xl mb-2">🌐</div>
+                        <div class="font-medium text-gray-800 dark:text-white">More Coming</div>
+                        <div class="text-sm text-gray-500">Stay tuned...</div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 text-center hover:shadow-lg transition-shadow">
+                        <div class="text-2xl mb-2">🚀</div>
+                        <div class="font-medium text-gray-800 dark:text-white">Request Site</div>
+                        <div class="text-sm text-gray-500">
+                            <a href="https://github.com/your-username/Imoogle-Downloader/issues" class="text-blue-500 hover:text-blue-600">
+                                GitHub Issues
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-100 dark:bg-gray-900 py-8 mt-16">
+        <div class="container mx-auto px-4 text-center">
+            <div class="text-gray-600 dark:text-gray-400">
+                <p class="mb-2">Made with ❤️ by the Imoogle Team</p>
+                <p class="text-sm">
+                    <a href="https://github.com/your-username/Imoogle-Downloader" class="hover:text-blue-500">GitHub</a> • 
+                    <a href="/health" class="hover:text-blue-500">API Health</a> • 
+                    <a href="https://vercel.com" class="hover:text-blue-500">Powered by Vercel</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    <script>
+        // Dark mode functionality
+        function toggleDarkMode() {
+            const body = document.getElementById('body');
+            const icon = document.getElementById('theme-icon');
+            
+            body.classList.toggle('dark');
+            
+            if (body.classList.contains('dark')) {
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('darkMode', 'false');
+            }
+        }
+        
+        // Load dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.getElementById('body').classList.add('dark');
+            document.getElementById('theme-icon').className = 'fas fa-sun';
+        }
+        
+        // Advanced options toggle
+        function toggleAdvanced() {
+            const options = document.getElementById('advancedOptions');
+            const chevron = document.getElementById('advanced-chevron');
+            
+            options.classList.toggle('hidden');
+            chevron.classList.toggle('rotate-180');
+        }
+        
+        // Download form handling
+        document.getElementById('downloadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const url = document.getElementById('urlInput').value;
+            const btn = document.getElementById('downloadBtn');
+            const btnText = document.getElementById('downloadBtnText');
+            
+            // Update button state
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            btnText.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+            
+            try {
+                const response = await fetch('/api/download', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url: url })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showProgressSection();
+                    addProgressItem(data.task_id, url, data.demo);
+                    showNotification('Demo download completed successfully!', 'success');
+                } else {
+                    showNotification(data.error || 'Failed to start download', 'error');
+                }
+            } catch (error) {
+                showNotification('Network error. Please try again.', 'error');
+            } finally {
+                // Reset button state
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btnText.innerHTML = '<i class="fas fa-download mr-2"></i>Start Download (Demo)';
+            }
+        });
+        
+        // Show progress section
+        function showProgressSection() {
+            document.getElementById('progressSection').classList.remove('hidden');
+        }
+        
+        // Add progress item
+        function addProgressItem(taskId, url, isDemo = false) {
+            const container = document.getElementById('progressContainer');
+            const domain = new URL(url).hostname.replace('www.', '');
+            
+            const progressItem = document.createElement('div');
+            progressItem.id = `progress-${taskId}`;
+            progressItem.className = 'bg-white dark:bg-gray-800 rounded-lg p-4 mb-4 border-l-4 border-green-500';
+            progressItem.innerHTML = `
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-check text-green-500"></i>
+                        <div>
+                            <div class="font-medium text-gray-800 dark:text-white">${domain} ${isDemo ? '(Demo)' : ''}</div>
+                            <div class="text-sm text-gray-500 truncate max-w-md">${url}</div>
+                        </div>
+                    </div>
+                    <div class="text-sm font-medium text-green-600" id="status-${taskId}">
+                        <i class="fas fa-check mr-1"></i>Completed
+                    </div>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div class="progress-bar bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full" 
+                         id="progress-bar-${taskId}" style="width: 100%"></div>
+                </div>
+                <div class="text-xs text-gray-500 mt-1" id="progress-text-${taskId}">100% - Demo completed instantly</div>
+            `;
+            
+            container.appendChild(progressItem);
+        }
+        
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
+            
+            notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 fade-in`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+        
+        // Auto-paste from clipboard (if supported)
+        document.getElementById('urlInput').addEventListener('focus', async function() {
+            if (navigator.clipboard && navigator.clipboard.readText) {
+                try {
+                    const text = await navigator.clipboard.readText();
+                    if (text && text.startsWith('http') && this.value === '') {
+                        this.value = text;
+                    }
+                } catch (err) {
+                    // Clipboard access denied or not supported
+                }
+            }
+        });
+
+        // Load supported sites dynamically
+        async function loadSupportedSites() {
+            try {
+                const response = await fetch('/api/supported-sites');
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Supported sites:', data.sites);
+                }
+            } catch (error) {
+                console.log('Could not load supported sites');
+            }
+        }
+
+        // Load supported sites on page load
+        document.addEventListener('DOMContentLoaded', loadSupportedSites);
+    </script>
+</body>
+</html>
