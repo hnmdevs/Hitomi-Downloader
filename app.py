@@ -7,40 +7,36 @@ A beautiful, fast, and extensible downloader for images and media from 70+ websi
 import os
 import sys
 import json
-import asyncio
 import threading
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
 from flask import Flask, render_template, request, jsonify, send_from_directory, redirect, url_for
-from flask_socketio import SocketIO, emit
 import requests
 from werkzeug.utils import secure_filename
 
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
-# Import our extractors
-from src.extractor import imgur_downloader, instagram_downloader, pinterest_downloader
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'imoogle_downloader_secret_key_2024'
-app.config['DOWNLOAD_FOLDER'] = os.path.join(os.getcwd(), 'downloads')
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
-# Initialize SocketIO for real-time updates
-socketio = SocketIO(app, cors_allowed_origins="*")
+# For Vercel, we'll use /tmp for temporary storage
+app.config['DOWNLOAD_FOLDER'] = '/tmp/downloads' if os.environ.get('VERCEL') else os.path.join(os.getcwd(), 'downloads')
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 # Ensure download directory exists
 os.makedirs(app.config['DOWNLOAD_FOLDER'], exist_ok=True)
 
-# Supported extractors mapping
+# Supported extractors mapping (simplified for Vercel)
 EXTRACTORS = {
-    'imgur.com': imgur_downloader,
-    'instagram.com': instagram_downloader,
-    'pinterest.com': pinterest_downloader,
-    # Add more as needed
+    'imgur.com': 'imgur',
+    'instagram.com': 'instagram', 
+    'pinterest.com': 'pinterest',
+    'reddit.com': 'reddit',
+    'twitter.com': 'twitter',
+    'youtube.com': 'youtube',
 }
 
 class DownloadManager:
@@ -76,24 +72,12 @@ class DownloadManager:
             self.active_downloads[task_id]['progress'] = progress
             if status:
                 self.active_downloads[task_id]['status'] = status
-            
-            # Emit progress update via SocketIO
-            socketio.emit('download_progress', {
-                'task_id': task_id,
-                'progress': progress,
-                'status': status or self.active_downloads[task_id]['status']
-            })
     
     def complete_download(self, task_id, success=True):
         """Mark download as completed"""
         if task_id in self.active_downloads:
             self.active_downloads[task_id]['status'] = 'completed' if success else 'failed'
             self.active_downloads[task_id]['progress'] = 100 if success else 0
-            
-            socketio.emit('download_complete', {
-                'task_id': task_id,
-                'success': success
-            })
 
 # Global download manager instance
 download_manager = DownloadManager()
@@ -125,20 +109,20 @@ def api_download():
     # Check if we support this site
     domain = parsed.netloc.lower().replace('www.', '')
     if domain not in EXTRACTORS:
-        return jsonify({'error': f'Site {domain} is not supported yet'}), 400
+        return jsonify({'error': f'Site {domain} is not supported yet. Supported sites: {", ".join(EXTRACTORS.keys())}'}), 400
     
-    # Start download task
+    # For Vercel demo, we'll simulate the download process
     task_id = download_manager.add_download(url, options)
     
-    # Start download in background thread
-    thread = threading.Thread(target=process_download, args=(task_id, url, options))
-    thread.daemon = True
-    thread.start()
+    # Simulate download completion
+    download_manager.update_progress(task_id, 100, 'completed')
+    download_manager.complete_download(task_id, True)
     
     return jsonify({
         'task_id': task_id,
-        'status': 'started',
-        'message': 'Download started successfully'
+        'status': 'completed',
+        'message': 'Download completed successfully (Demo mode)',
+        'demo': True
     })
 
 @app.route('/api/status/<task_id>')
@@ -157,6 +141,22 @@ def api_history():
         'total': len(download_manager.download_history)
     })
 
+@app.route('/api/supported-sites')
+def api_supported_sites():
+    """Get list of supported sites"""
+    sites = []
+    for domain, extractor in EXTRACTORS.items():
+        sites.append({
+            'domain': domain,
+            'name': domain.split('.')[0].title(),
+            'extractor': extractor
+        })
+    
+    return jsonify({
+        'sites': sites,
+        'total': len(sites)
+    })
+
 @app.route('/downloads/<path:filename>')
 def download_file(filename):
     """Serve downloaded files"""
@@ -168,51 +168,23 @@ def health_check():
     return jsonify({
         'status': 'healthy',
         'version': '1.0.0',
-        'timestamp': datetime.now().isoformat()
+        'timestamp': datetime.now().isoformat(),
+        'platform': 'vercel' if os.environ.get('VERCEL') else 'local'
     })
 
-def process_download(task_id, url, options):
-    """Process download in background thread"""
-    try:
-        download_manager.update_progress(task_id, 10, 'initializing')
-        
-        # Parse domain and get appropriate extractor
-        domain = urlparse(url).netloc.lower().replace('www.', '')
-        extractor_module = EXTRACTORS.get(domain)
-        
-        if not extractor_module:
-            download_manager.complete_download(task_id, False)
-            return
-        
-        download_manager.update_progress(task_id, 30, 'extracting')
-        
-        # Create download folder for this task
-        task_folder = os.path.join(app.config['DOWNLOAD_FOLDER'], task_id)
-        os.makedirs(task_folder, exist_ok=True)
-        
-        download_manager.update_progress(task_id, 50, 'downloading')
-        
-        # Simulate download process (replace with actual extractor logic)
-        import time
-        for i in range(50, 100, 10):
-            time.sleep(0.5)  # Simulate work
-            download_manager.update_progress(task_id, i, 'downloading')
-        
-        download_manager.complete_download(task_id, True)
-        
-    except Exception as e:
-        print(f"Download error for task {task_id}: {str(e)}")
-        download_manager.complete_download(task_id, False)
+@app.route('/demo')
+def demo():
+    """Demo page showing the application features"""
+    return render_template('demo.html')
 
-@socketio.on('connect')
-def handle_connect():
-    """Handle client connection"""
-    emit('connected', {'message': 'Connected to Imoogle Downloader'})
+# Error handlers
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({'error': 'Not found'}), 404
 
-@socketio.on('disconnect')
-def handle_disconnect():
-    """Handle client disconnection"""
-    print('Client disconnected')
+@app.errorhandler(500)
+def internal_error(error):
+    return jsonify({'error': 'Internal server error'}), 500
 
 if __name__ == '__main__':
     # Create templates directory if it doesn't exist
@@ -224,4 +196,4 @@ if __name__ == '__main__':
     print("🔗 API available at http://localhost:5000/api/")
     
     # Run the app
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

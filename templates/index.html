@@ -61,6 +61,16 @@
             0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.5); }
             50% { box-shadow: 0 0 30px rgba(102, 126, 234, 0.8); }
         }
+
+        .demo-badge {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
     </style>
 </head>
 <body class="min-h-screen transition-colors duration-300" id="body">
@@ -72,7 +82,10 @@
                 <div class="flex items-center space-x-3">
                     <div class="text-4xl">🖼️</div>
                     <div>
-                        <h1 class="text-3xl font-bold">Imoogle Downloader</h1>
+                        <div class="flex items-center space-x-3">
+                            <h1 class="text-3xl font-bold">Imoogle Downloader</h1>
+                            <span class="demo-badge">DEMO</span>
+                        </div>
                         <p class="text-blue-100">Download images & media from 70+ websites</p>
                     </div>
                 </div>
@@ -88,6 +101,26 @@
             </div>
         </div>
     </header>
+
+    <!-- Demo Notice -->
+    <div class="bg-yellow-100 dark:bg-yellow-900 border-l-4 border-yellow-500 p-4 mb-6">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-info-circle text-yellow-500"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-yellow-700 dark:text-yellow-300">
+                        <strong>Demo Mode:</strong> This is a demonstration version deployed on Vercel. 
+                        Downloads are simulated for showcase purposes. 
+                        <a href="https://github.com/your-username/Imoogle-Downloader" class="underline hover:text-yellow-800">
+                            Get the full version on GitHub
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-8">
@@ -174,7 +207,7 @@
                         class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-4 px-6 rounded-xl font-semibold text-lg hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg pulse-glow"
                     >
                         <i class="fas fa-download mr-2"></i>
-                        <span id="downloadBtnText">Start Download</span>
+                        <span id="downloadBtnText">Start Download (Demo)</span>
                     </button>
                 </form>
             </div>
@@ -223,21 +256,15 @@
                     </div>
                     
                     <div class="bg-white dark:bg-gray-800 rounded-lg p-4 text-center hover:shadow-lg transition-shadow">
-                        <div class="text-2xl mb-2">🎭</div>
-                        <div class="font-medium text-gray-800 dark:text-white">DeviantArt</div>
-                        <div class="text-sm text-gray-500">Digital Art</div>
+                        <div class="text-2xl mb-2">💬</div>
+                        <div class="font-medium text-gray-800 dark:text-white">Reddit</div>
+                        <div class="text-sm text-gray-500">Discussion Forum</div>
                     </div>
                     
                     <div class="bg-white dark:bg-gray-800 rounded-lg p-4 text-center hover:shadow-lg transition-shadow">
-                        <div class="text-2xl mb-2">🎨</div>
-                        <div class="font-medium text-gray-800 dark:text-white">ArtStation</div>
-                        <div class="text-sm text-gray-500">Professional Art</div>
-                    </div>
-                    
-                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 text-center hover:shadow-lg transition-shadow">
-                        <div class="text-2xl mb-2">📷</div>
-                        <div class="font-medium text-gray-800 dark:text-white">Flickr</div>
-                        <div class="text-sm text-gray-500">Photography</div>
+                        <div class="text-2xl mb-2">🐦</div>
+                        <div class="font-medium text-gray-800 dark:text-white">Twitter</div>
+                        <div class="text-sm text-gray-500">Social Media</div>
                     </div>
                     
                     <div class="bg-white dark:bg-gray-800 rounded-lg p-4 text-center hover:shadow-lg transition-shadow">
@@ -248,16 +275,19 @@
                     
                     <div class="bg-white dark:bg-gray-800 rounded-lg p-4 text-center hover:shadow-lg transition-shadow">
                         <div class="text-2xl mb-2">🌐</div>
-                        <div class="font-medium text-gray-800 dark:text-white">+60 More</div>
-                        <div class="text-sm text-gray-500">And counting...</div>
+                        <div class="font-medium text-gray-800 dark:text-white">More Coming</div>
+                        <div class="text-sm text-gray-500">Stay tuned...</div>
                     </div>
-                </div>
-                
-                <div class="text-center mt-6">
-                    <p class="text-gray-600 dark:text-gray-400">
-                        Don't see your favorite site? 
-                        <a href="#" class="text-blue-500 hover:text-blue-600">Request it here!</a>
-                    </p>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 text-center hover:shadow-lg transition-shadow">
+                        <div class="text-2xl mb-2">🚀</div>
+                        <div class="font-medium text-gray-800 dark:text-white">Request Site</div>
+                        <div class="text-sm text-gray-500">
+                            <a href="https://github.com/your-username/Imoogle-Downloader/issues" class="text-blue-500 hover:text-blue-600">
+                                GitHub Issues
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -270,20 +300,16 @@
             <div class="text-gray-600 dark:text-gray-400">
                 <p class="mb-2">Made with ❤️ by the Imoogle Team</p>
                 <p class="text-sm">
-                    <a href="#" class="hover:text-blue-500">Privacy Policy</a> • 
-                    <a href="#" class="hover:text-blue-500">Terms of Service</a> • 
-                    <a href="#" class="hover:text-blue-500">GitHub</a>
+                    <a href="https://github.com/your-username/Imoogle-Downloader" class="hover:text-blue-500">GitHub</a> • 
+                    <a href="/health" class="hover:text-blue-500">API Health</a> • 
+                    <a href="https://vercel.com" class="hover:text-blue-500">Powered by Vercel</a>
                 </p>
             </div>
         </div>
     </footer>
     
     <!-- Scripts -->
-    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
     <script>
-        // Initialize Socket.IO
-        const socket = io();
-        
         // Dark mode functionality
         function toggleDarkMode() {
             const body = document.getElementById('body');
@@ -326,7 +352,7 @@
             // Update button state
             btn.disabled = true;
             btn.classList.add('opacity-50', 'cursor-not-allowed');
-            btnText.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Starting...';
+            btnText.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
             
             try {
                 const response = await fetch('/api/download', {
@@ -341,8 +367,8 @@
                 
                 if (response.ok) {
                     showProgressSection();
-                    addProgressItem(data.task_id, url);
-                    showNotification('Download started successfully!', 'success');
+                    addProgressItem(data.task_id, url, data.demo);
+                    showNotification('Demo download completed successfully!', 'success');
                 } else {
                     showNotification(data.error || 'Failed to start download', 'error');
                 }
@@ -352,7 +378,7 @@
                 // Reset button state
                 btn.disabled = false;
                 btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                btnText.innerHTML = '<i class="fas fa-download mr-2"></i>Start Download';
+                btnText.innerHTML = '<i class="fas fa-download mr-2"></i>Start Download (Demo)';
             }
         });
         
@@ -362,65 +388,35 @@
         }
         
         // Add progress item
-        function addProgressItem(taskId, url) {
+        function addProgressItem(taskId, url, isDemo = false) {
             const container = document.getElementById('progressContainer');
             const domain = new URL(url).hostname.replace('www.', '');
             
             const progressItem = document.createElement('div');
             progressItem.id = `progress-${taskId}`;
-            progressItem.className = 'bg-white dark:bg-gray-800 rounded-lg p-4 mb-4 border-l-4 border-blue-500';
+            progressItem.className = 'bg-white dark:bg-gray-800 rounded-lg p-4 mb-4 border-l-4 border-green-500';
             progressItem.innerHTML = `
                 <div class="flex items-center justify-between mb-2">
                     <div class="flex items-center space-x-3">
-                        <i class="fas fa-download text-blue-500"></i>
+                        <i class="fas fa-check text-green-500"></i>
                         <div>
-                            <div class="font-medium text-gray-800 dark:text-white">${domain}</div>
+                            <div class="font-medium text-gray-800 dark:text-white">${domain} ${isDemo ? '(Demo)' : ''}</div>
                             <div class="text-sm text-gray-500 truncate max-w-md">${url}</div>
                         </div>
                     </div>
-                    <div class="text-sm font-medium text-gray-600 dark:text-gray-400" id="status-${taskId}">
-                        Initializing...
+                    <div class="text-sm font-medium text-green-600" id="status-${taskId}">
+                        <i class="fas fa-check mr-1"></i>Completed
                     </div>
                 </div>
                 <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                    <div class="progress-bar bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full" 
-                         id="progress-bar-${taskId}" style="width: 0%"></div>
+                    <div class="progress-bar bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full" 
+                         id="progress-bar-${taskId}" style="width: 100%"></div>
                 </div>
-                <div class="text-xs text-gray-500 mt-1" id="progress-text-${taskId}">0%</div>
+                <div class="text-xs text-gray-500 mt-1" id="progress-text-${taskId}">100% - Demo completed instantly</div>
             `;
             
             container.appendChild(progressItem);
         }
-        
-        // Socket.IO event handlers
-        socket.on('download_progress', function(data) {
-            const progressBar = document.getElementById(`progress-bar-${data.task_id}`);
-            const progressText = document.getElementById(`progress-text-${data.task_id}`);
-            const status = document.getElementById(`status-${data.task_id}`);
-            
-            if (progressBar && progressText && status) {
-                progressBar.style.width = `${data.progress}%`;
-                progressText.textContent = `${data.progress}%`;
-                status.textContent = data.status.charAt(0).toUpperCase() + data.status.slice(1);
-            }
-        });
-        
-        socket.on('download_complete', function(data) {
-            const progressItem = document.getElementById(`progress-${data.task_id}`);
-            const status = document.getElementById(`status-${data.task_id}`);
-            
-            if (progressItem && status) {
-                if (data.success) {
-                    progressItem.className = progressItem.className.replace('border-blue-500', 'border-green-500');
-                    status.innerHTML = '<i class="fas fa-check text-green-500 mr-1"></i>Completed';
-                    showNotification('Download completed successfully!', 'success');
-                } else {
-                    progressItem.className = progressItem.className.replace('border-blue-500', 'border-red-500');
-                    status.innerHTML = '<i class="fas fa-times text-red-500 mr-1"></i>Failed';
-                    showNotification('Download failed. Please try again.', 'error');
-                }
-            }
-        });
         
         // Notification system
         function showNotification(message, type = 'info') {
@@ -450,6 +446,22 @@
                 }
             }
         });
+
+        // Load supported sites dynamically
+        async function loadSupportedSites() {
+            try {
+                const response = await fetch('/api/supported-sites');
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Supported sites:', data.sites);
+                }
+            } catch (error) {
+                console.log('Could not load supported sites');
+            }
+        }
+
+        // Load supported sites on page load
+        document.addEventListener('DOMContentLoaded', loadSupportedSites);
     </script>
 </body>
 </html>
